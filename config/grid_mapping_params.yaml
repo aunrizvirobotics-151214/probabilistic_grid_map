@@ -1,0 +1,22 @@
+grid_mapping_node:
+  ros__parameters:
+    # Map dimensions
+    map_size: 20.0        # Total map extent in each axis [m]
+    map_res: 0.05         # Cell size [m/cell] — 5 cm resolution
+
+    # Log-odds sensor model probabilities
+    prior: 0.5            # Prior probability: unknown cell
+    prob_occ: 0.7         # P(cell occupied | beam endpoint here)
+    prob_free: 0.3        # P(cell free     | beam passes through)
+
+    # Laser range filter
+    max_range: 10.0       # Discard beams beyond this distance [m]
+
+    # Publication
+    publish_rate: 2.0     # How often to publish /grid_map [Hz]
+    frame_id: "odom"      # Frame in which the map is expressed
+
+    # Map saving (nav2_map_server-compatible .pgm + .yaml)
+    save_map_path: "~/robotics/ros2_ws/maps/grid_map"
+    # auto_save_interval: 0.0  # 0 = save only on Ctrl-C/shutdown
+    #                          # set e.g. 30.0 to also save every 30 s
