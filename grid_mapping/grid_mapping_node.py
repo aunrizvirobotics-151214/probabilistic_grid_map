@@ -2,19 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Occupancy Grid Mapping with Known Poses
-========================================
-ROS 2 node implementing the log-odds occupancy grid mapping algorithm
-from Probabilistic Robotics (Thrun et al., Ch. 9), matching the Ex02
-assignment structure.
-
-Algorithm per scan:
-  1. For each valid laser beam, trace a ray from robot cell to endpoint
-     cell using Bresenham's line algorithm.
-  2. Update every cell along the ray with the free log-odds increment.
-  3. Update the endpoint cell with the occupied log-odds increment.
-
-Log-odds update rule (standard occupancy grid mapping):
-  l(x) ← l(x) + inv_sensor_model(x) - l_prior
 
 Subscriptions:
   /scan   sensor_msgs/LaserScan   - laser range measurements
@@ -106,8 +93,7 @@ class GridMappingNode(Node):
             f'{grid_n}×{grid_n} cells @ {self.map_res} m/cell '
             f'({map_size} m × {map_size} m)'
         )
-
-    # ── Core algorithm functions (mirroring ex2.py assignment) ────────────────
+      
 
     @staticmethod
     def prob2logodds(p: float) -> float:
@@ -227,7 +213,6 @@ class GridMappingNode(Node):
             if self.in_bounds(ep_row, ep_col):
                 self.log_odds_map[ep_row, ep_col] += self.delta_occ
 
-    # ── ROS callbacks ─────────────────────────────────────────────────────────
 
     def odom_callback(self, msg: Odometry) -> None:
         """Extract (x, y, yaw) from Odometry and store as current_pose."""
@@ -253,10 +238,8 @@ class GridMappingNode(Node):
             msg.angle_increment,
         )
 
-    # ── Map publisher ─────────────────────────────────────────────────────────
 
     def publish_map(self) -> None:
-        """Convert log-odds map to ROS OccupancyGrid and publish."""
         msg = OccupancyGrid()
         msg.header.stamp    = self.get_clock().now().to_msg()
         msg.header.frame_id = self.frame_id
@@ -283,17 +266,7 @@ class GridMappingNode(Node):
 
 
     def save_map(self) -> None:
-        """
-        Write the current log-odds map to disk as a nav2_map_server-compatible
-        .pgm image + .yaml metadata file.
-
-        PGM pixel encoding (matches nav2_map_server trinary convention):
-          0   → occupied  (black)
-          254 → free      (white)
-          205 → unknown   (grey)
-
-        The .yaml is loadable directly by map_server / mcl_localization.
-        """
+        
         from PIL import Image
         import yaml
 
